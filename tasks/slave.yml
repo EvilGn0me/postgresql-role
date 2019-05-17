@@ -29,3 +29,12 @@
   become: yes
   become_method: su
   become_user: '{{ postgresql.user }}'
+
+- name: manage posgtresql conf
+  template:
+    src: templates/postgresql.conf
+    dest: '{{ postgresql_conf.datadir }}/postgresql.conf'
+    owner: '{{ postgresql.user }}'
+    group: '{{ postgresql.user }}'
+    mode: 0644
+  notify: restart postgresql
