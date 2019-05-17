@@ -1,0 +1,11 @@
+- name: install postgresql repo
+  yum:
+    name: '{{ postgresql.repo_url }}'
+    state: present
+
+- name: install packages
+  yum:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - '{{ postgresql.packages }}'

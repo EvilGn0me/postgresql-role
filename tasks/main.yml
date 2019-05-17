@@ -1,0 +1,48 @@
+---
+# tasks file for postgresql-role
+- name: Load a variable file based on the OS type, or a default if not found. Using free-form to specify the file.
+  include_vars: '{{ item }}'
+  with_first_found:
+    - '{{ ansible_distribution|lower }}.yml'
+    - '{{ ansible_os_family|lower }}.yml'
+
+- name: pre-requisites tasks
+  import_tasks: redhat.yml
+  when: ansible_os_family|lower == 'redhat'
+
+- name: pre-requisites tasks
+  import_tasks: debian.yml
+  when: ansible_os_family|lower == 'debian'
+
+- name: init postgresql data directory
+  shell: '/usr/pgsql-9.6/bin/pg_ctl initdb -D {{ postgresql_conf.datadir }}'
+  args:
+    creates: '{{ postgresql_conf.datadir }}/base'
+  become: yes
+  become_method: su
+  become_user: '{{ postgresql.user }}'
+
+- name: manage posgtresql conf
+  template:
+    src: templates/postgresql.conf
+    dest: '{{ postgresql_conf.datadir }}/postgresql.conf'
+    owner: '{{ postgresql.user }}'
+    group: '{{ postgresql.user }}'
+    mode: 0644
+  notify: restart postgresql
+
+- name: ensure services running
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+  - "{{ postgresql.services }}"
+
+- name: postgresql master tasks
+  import_tasks: master.yml
+  when: postgresql_conf.master == True
+
+- name: postgresql master tasks
+  import_tasks: slave.yml
+  when: postgresql_conf.slave == True

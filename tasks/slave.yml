@@ -1,0 +1,37 @@
+- name: upgrade pip
+  pip:
+    name: pip
+    state: latest
+  ignore_errors: yes
+
+- name: install pexpect
+  pip:
+    name: pexpect
+    state: latest
+  ignore_errors: yes
+
+- name: init postgresql data directory
+  shell: 'rm -rf {{ postgresql_conf.datadir }}'
+  args:
+    creates: '{{ postgresql_conf.datadir }}/recovery.conf'
+    warn: False
+  become: yes
+  become_method: su
+  become_user: '{{ postgresql.user }}'
+
+- name: manage posgtresql conf
+  template:
+    src: templates/slave.exp
+    dest: '/usr/local/bin/slave.exp'
+    mode: 0755
+
+- name: init postgresql slave directory
+  expect:
+    command: 'pg_basebackup -h 172.14.88.11 -D {{ postgresql_conf.datadir }} -R -P -U replication --xlog-method=stream'
+    responses:
+      Password:
+        - '{{ postgresql_conf.replication_pass }}'
+    creates: '{{ postgresql_conf.datadir }}/base'
+  become: yes
+  become_method: su
+  become_user: '{{ postgresql.user }}'

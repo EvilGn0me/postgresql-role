@@ -1,0 +1,17 @@
+- name: manage postgresql replication user
+  postgresql_user:
+    name: '{{ postgresql_conf.replication_user }}'
+    password: '{{ postgresql_conf.replication_pass }}'
+    role_attr_flags: LOGIN,REPLICATION
+    expires: infinity
+  become: yes
+  become_method: su
+  become_user: '{{ postgresql.user }}'
+
+- name: manage replication in pg_hba
+  blockinfile:
+    dest: '{{ postgresql_conf.datadir }}/pg_hba.conf'
+    block: |
+      host    all             all             0.0.0.0/0                md5
+      host    replication     {{ postgresql_conf.replication_user }}      0.0.0.0/0                md5
+  notify: restart postgresql

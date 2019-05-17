@@ -1,0 +1,16 @@
+---
+# defaults file for postgresql-role
+postgresql_conf:
+  listen: '0.0.0.0'
+  max_conn: 100
+  shared_buffers: '128MB'
+  dsmt: 'posix'
+  wal_level: 'replica'
+  max_wal_senders: 3
+  wal_keep_segments: 128
+  datadir: '/var/lib/pgsql/9.6/data'
+  replication_user: 'replication'
+  replication_pass: 'mysupersecretword'
+  master: False
+  masterip: '172.14.88.11'
+  slave: False
