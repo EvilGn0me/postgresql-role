@@ -3,7 +3,7 @@ postgresql:
   pgbinpath: '/usr/pgsql-10/bin'
   user: 'postgres'
   packages:
-    - epel-release
+    - python-pip
     - expect
     - python-psycopg2
     - postgresql10

@@ -3,9 +3,12 @@
     name: '{{ postgresql.repo_url }}'
     state: present
 
+- name: install epel
+  yum:
+    name: epel-release
+    state: latest
+
 - name: install packages
   yum:
-    name: '{{ item }}'
+    name: '{{ postgresql.packages }}'
     state: latest
-  with_items:
-    - '{{ postgresql.packages }}'

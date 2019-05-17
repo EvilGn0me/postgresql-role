@@ -20,3 +20,11 @@
       host    all             all             0.0.0.0/0                md5
       host    replication     {{ postgresql_conf.replication_user }}      0.0.0.0/0                md5
   notify: restart postgresql
+
+- name: restart postgresql
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items:
+  - "{{ postgresql.services }}"
