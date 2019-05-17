@@ -1,7 +1,7 @@
 PostgreSQL-role
 =========
 
-Postgresql role here. Currently it installs only for 9.6 version.
+Postgresql role here. Currently it installs only postgresql 10.
 
 ### How do I setup? ###
 
