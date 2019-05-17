@@ -32,5 +32,5 @@ TODO
 * Fix Readme.
 * Add more variables. (logs and other stuff)
 * Add tests.
-* Add installation of different than 9.6 postgresql version.
+* Add installation of different than 10 postgresql version.
 * master ip should be dynamically generated.

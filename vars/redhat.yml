@@ -1,12 +1,12 @@
 postgresql:
   repo_url: 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm'
-  pgbinpath: '/usr/pgsql-9.6/bin'
+  pgbinpath: '/usr/pgsql-10/bin'
   user: 'postgres'
   packages:
     - epel-release
     - expect
     - python-psycopg2
-    - postgresql96
-    - postgresql96-server
+    - postgresql10
+    - postgresql10-server
   services:
-    - postgresql-9.6
+    - postgresql-10

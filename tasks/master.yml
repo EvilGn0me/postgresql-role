@@ -1,9 +1,14 @@
+- name: creating md5 hash for replication password
+  shell: echo "md5$(echo -n '{{ postgresql_conf.replication_pass }}{{ postgresql_conf.replication_user }}' | md5sum | awk '{print $1}')"
+  register: encrypted_pass
+
 - name: manage postgresql replication user
   postgresql_user:
     name: '{{ postgresql_conf.replication_user }}'
-    password: '{{ postgresql_conf.replication_pass }}'
+    password: '{{ encrypted_pass.stdout }}'
     role_attr_flags: LOGIN,REPLICATION
     expires: infinity
+    encrypted: yes
   become: yes
   become_method: su
   become_user: '{{ postgresql.user }}'

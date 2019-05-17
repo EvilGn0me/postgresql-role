@@ -14,8 +14,10 @@
   import_tasks: debian.yml
   when: ansible_os_family|lower == 'debian'
 
+
+
 - name: init postgresql data directory
-  shell: '/usr/pgsql-9.6/bin/pg_ctl initdb -D {{ postgresql_conf.datadir }}'
+  shell: '{{ postgresql.pgbinpath}}/pg_ctl initdb -D {{ postgresql_conf.datadir }}'
   args:
     creates: '{{ postgresql_conf.datadir }}/base'
   become: yes

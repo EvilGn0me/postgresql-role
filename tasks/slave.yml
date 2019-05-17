@@ -10,7 +10,7 @@
     state: latest
   ignore_errors: yes
 
-- name: init postgresql data directory
+- name: remove postgresql data directory for slaves
   shell: 'rm -rf {{ postgresql_conf.datadir }}'
   args:
     creates: '{{ postgresql_conf.datadir }}/recovery.conf'
@@ -19,9 +19,9 @@
   become_method: su
   become_user: '{{ postgresql.user }}'
 
-- name: init postgresql slave directory
+- name: reinit postgresql slave directory
   expect:
-    command: 'pg_basebackup -h {{ postgresql_conf.masterip }} -D {{ postgresql_conf.datadir }} -R -P -U replication --xlog-method=stream'
+    command: 'pg_basebackup -h {{ postgresql_conf.masterip }} -D {{ postgresql_conf.datadir }} -R -P -U replication --wal-method=stream'
     responses:
       Password:
         - '{{ postgresql_conf.replication_pass }}'

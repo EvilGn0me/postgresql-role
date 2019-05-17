@@ -8,7 +8,7 @@ postgresql_conf:
   wal_level: 'replica'
   max_wal_senders: 3
   wal_keep_segments: 128
-  datadir: '/var/lib/pgsql/9.6/data'
+  datadir: '/var/lib/pgsql/10/data'
   replication_user: 'replication'
   replication_pass: 'mysupersecretword'
   master: False
