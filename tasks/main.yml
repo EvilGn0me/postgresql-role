@@ -11,9 +11,9 @@
   when: ansible_os_family|lower == 'redhat'
 
 - name: init postgresql data directory
-  shell: '{{ postgresql.pgbinpath }}/pg_ctl initdb -D {{ postgresql_conf.datadir }}'
+  shell: '{{ postgresql.pgbinpath }}/pg_ctl initdb -D {{ postgresql.datadir }}'
   args:
-    creates: '{{ postgresql_conf.datadir }}/base'
+    creates: '{{ postgresql.datadir }}/base'
   become: yes
   become_method: su
   become_user: '{{ postgresql.user }}'
@@ -21,7 +21,7 @@
 - name: manage posgtresql conf
   template:
     src: templates/postgresql.conf
-    dest: '{{ postgresql_conf.datadir }}/postgresql.conf'
+    dest: '{{ postgresql.datadir }}/postgresql.conf'
     owner: '{{ postgresql.user }}'
     group: '{{ postgresql.user }}'
     mode: 0644
