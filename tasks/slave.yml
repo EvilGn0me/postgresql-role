@@ -11,9 +11,9 @@
   ignore_errors: yes
 
 - name: remove postgresql data directory for slaves
-  shell: 'rm -rf {{ postgresql_conf.datadir }}'
+  shell: 'rm -rf {{ postgresql.datadir }}'
   args:
-    creates: '{{ postgresql_conf.datadir }}/recovery.conf'
+    creates: '{{ postgresql.datadir }}/recovery.conf'
     warn: False
   become: yes
   become_method: su
@@ -21,11 +21,11 @@
 
 - name: reinit postgresql slave directory
   expect:
-    command: 'pg_basebackup -h {{ postgresql_conf.masterip }} -D {{ postgresql_conf.datadir }} -R -P -U replication --wal-method=stream'
+    command: 'pg_basebackup -h {{ postgresql_conf.masterip }} -D {{ postgresql.datadir }} -R -P -U replication --wal-method=stream'
     responses:
       Password:
         - '{{ postgresql_conf.replication_pass }}'
-    creates: '{{ postgresql_conf.datadir }}/base'
+    creates: '{{ postgresql.datadir }}/base'
   become: yes
   become_method: su
   become_user: '{{ postgresql.user }}'
@@ -33,7 +33,7 @@
 - name: manage posgtresql conf
   template:
     src: templates/postgresql.conf
-    dest: '{{ postgresql_conf.datadir }}/postgresql.conf'
+    dest: '{{ postgresql.datadir }}/postgresql.conf'
     owner: '{{ postgresql.user }}'
     group: '{{ postgresql.user }}'
     mode: 0644
